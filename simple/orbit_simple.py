@@ -44,8 +44,25 @@ TOTAL_ENERGY = (1/2 * np.linalg.norm(INIT_FRAME[1])**2) - (G*M_EARTH / np.linalg
 
 history[0] = INIT_FRAME  # Save initial frame
 
+plt.figure(1)
+
+graph = plt.scatter(0,0,c='red')
+
+plt.xlabel('km')
+plt.ylabel('km')
+plt.xlim(-1.2*R_EARTH/1e3,1.2*R_EARTH/1e3)
+plt.ylim(-1.2*R_EARTH/1e3,1.2*R_EARTH/1e3)
+plt.gca().set_aspect('equal')
+
+
+plt.draw()
+#cbar = plt.colorbar(ticks=np.arange(0, T_MAX+0.01, T_MAX/4))
+#cbar.set_label("time (sec)")
+
+
+
 for istep in range(1, T_ITER):
-    # t = T_STEP * istep  # (sec) Time at step
+    t = T_STEP * istep  # (sec) Time at step
 
     last = history[istep-1]
 
@@ -63,26 +80,15 @@ for istep in range(1, T_ITER):
 
     history[istep] = np.array([xp, vp, ap])
 
+    #graph = plt.scatter(0, 0, c='red')
+    what_is = print(*(xp.reshape(2,1)/1e3))
+    plt.scatter(*(xp.reshape(2,1) / 1e3), c=[t], s=0.05)  # y pos vs. x pos
+    plt.draw()
+    plt.pause(0.001)
+    #plt.scatter(*(history[:, 0, :].T / 1e3), c=t_seconds, s=0.05)  # y pos vs. x pos
+
 
 # PLOTTING:
-plt.figure(1)
-
-plt.scatter(0,0,c='red')
-t_seconds = np.arange(0, T_MAX, T_STEP)
-
-plt.scatter(*(history[:, 0, :].T/1e3), c=t_seconds, s=0.05)  # y pos vs. x pos
-
-plt.xlabel('km')
-plt.ylabel('km')
-plt.xlim(-1.2*R_EARTH/1e3,1.2*R_EARTH/1e3)
-plt.ylim(-1.2*R_EARTH/1e3,1.2*R_EARTH/1e3)
-plt.gca().set_aspect('equal')
-
-cbar = plt.colorbar(ticks=np.arange(0, T_MAX+0.01, T_MAX/4))
-cbar.set_label("time (sec)")
-
-plt.show()
-
 plt.figure(2)
 
 ske = 1/2 * (np.linalg.norm(history[:, 1], axis=1)**2)
