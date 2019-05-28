@@ -60,33 +60,33 @@ plt.draw()
 #cbar.set_label("time (sec)")
 
 
+try:
+    for istep in range(1, T_ITER):
+        t = T_STEP * istep  # (sec) Time at step
 
-for istep in range(1, T_ITER):
-    t = T_STEP * istep  # (sec) Time at step
+        last = history[istep-1]
 
-    last = history[istep-1]
+        # Acc from inverse sq law
+        ap = last[KEY.ACC]
 
-    # Acc from inverse sq law
-    ap = last[KEY.ACC]
+        for i in range(0, 5):
+            vp = last[KEY.VEL] + ap * T_STEP
+            xp = last[KEY.POS] + (vp) * T_STEP
+            ap = (accel_from_x(xp) + accel_from_x(last[KEY.POS])) / 2
 
-    for i in range(0, 5):
-        vp = last[KEY.VEL] + ap * T_STEP
-        xp = last[KEY.POS] + (vp) * T_STEP
-        ap = (accel_from_x(xp) + accel_from_x(last[KEY.POS])) / 2
+        rad = np.linalg.norm(xp)
+        vp_speed = np.linalg.norm(vp)
+        ang_momentum = rad * vp_speed
 
-    rad = np.linalg.norm(xp)
-    vp_speed = np.linalg.norm(vp)
-    ang_momentum = rad * vp_speed
+        history[istep] = np.array([xp, vp, ap])
 
-    history[istep] = np.array([xp, vp, ap])
-
-    #graph = plt.scatter(0, 0, c='red')
-    what_is = print(*(xp.reshape(2,1)/1e3))
-    plt.scatter(*(xp.reshape(2,1) / 1e3), c=[t], s=0.05)  # y pos vs. x pos
-    plt.draw()
-    plt.pause(0.001)
-    #plt.scatter(*(history[:, 0, :].T / 1e3), c=t_seconds, s=0.05)  # y pos vs. x pos
-
+        #graph = plt.scatter(0, 0, c='red')
+        plt.scatter(*(xp.reshape(2,1) / 1e3), c=[t], s=0.05)  # y pos vs. x pos
+        plt.draw()
+        plt.pause(0.001)
+        #plt.scatter(*(history[:, 0, :].T / 1e3), c=t_seconds, s=0.05)  # y pos vs. x pos
+except KeyboardInterrupt:
+    pass
 
 # PLOTTING:
 plt.figure(2)
@@ -96,6 +96,7 @@ gpe = -G*M_EARTH / np.linalg.norm(history[:, 0], axis=1)
 
 energy = ske+gpe
 
+t_seconds = np.arange(0, T_MAX, T_STEP)
 plt.plot(t_seconds, 100*((energy-TOTAL_ENERGY)/np.abs(TOTAL_ENERGY)))
 plt.xlabel('Time (sec)')
 plt.ylabel('Total Energy (%)')
