@@ -18,7 +18,7 @@ MODE = CalcMode.AVG
 
 
 T_STEP = np.array(0.1)  # sec
-T_MAX = np.array(4)  # sec
+T_MAX = np.array(3)  # sec
 T_ITER = math.floor(T_MAX / T_STEP)  # number of iterations based on time designation
 
 
