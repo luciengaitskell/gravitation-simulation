@@ -22,17 +22,11 @@ s = Simulation(np.array(0.1), np.array(95*60*4), b)
 g = OrbitalGraphics(b)
 
 if __name__ == '__main__' and sys.flags.interactive == 0:
-    MAX = 10000
-    tracking = np.zeros((MAX, 3))
-    for i in range(0, MAX):
+    for i in range(0, s.T_ITER):
         s.frame()
-        tracking[i, 0] = b[0].history[i-1][KEY.POS, 0]
-        tracking[i, 1] = b[0].history[i-1][KEY.POS, 1]
-        tracking[i, 2] = 0
-        if i % 3 == 0:
-            g.bodies[0].transform = STTransform(translate=[b[0].state[0, 0], b[0].state[0, 1], 0])
-            g.trails.set_data(tracking[0:i+1], edge_color=None, face_color=(1, 1, 1, .5), size=5)
-            g.bodies[1].transform = STTransform(translate=[b[1].state[0, 0], b[1].state[0, 1], 0])
-            g.bodies[2].transform = STTransform(translate=[b[2].state[0, 0], b[2].state[0, 1], 0])
+        if i % 30 == 0:
+            for b_i in range(len(b)):
+                g.bodies[b_i].transform = STTransform(translate=[b[b_i].state[0, 0], b[b_i].state[0, 1], 0])
+                g.trails[b_i].set_data(b[b_i].tracking[0:i+1], edge_color=b[b_i].color, face_color=None, size=5)
             print(np.linalg.norm(b[0].state[KEY.VEL]), b[0].state[KEY.ACC])
             g.draw()
