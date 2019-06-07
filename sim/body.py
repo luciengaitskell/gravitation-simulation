@@ -19,6 +19,8 @@ class Body:
 
         self.color = color
 
+        self.tracking = None
+
         self.curr_state = None
 
     def accel_from_pos(self, b2, pos=None):

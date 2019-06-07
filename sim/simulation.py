@@ -13,6 +13,8 @@ class Simulation:
         self.i_step = 0
 
         self.bodies = bodies
+        for b in self.bodies:
+            b.tracking = np.zeros((self.T_ITER, 3))
 
     def frame(self):
         self.i_step += 1
@@ -26,6 +28,9 @@ class Simulation:
         for b in self.bodies:
             b.history.append(None)
             b.history[self.i_step] = b.curr_state
+            b.tracking[self.i_step-1, 0] = b.history[self.i_step-1][KEY.POS, 0]
+            b.tracking[self.i_step-1, 1] = b.history[self.i_step-1][KEY.POS, 1]
+            b.tracking[self.i_step-1, 2] = 0
 
     def _calc_accel(self):
         for b in self.bodies:
