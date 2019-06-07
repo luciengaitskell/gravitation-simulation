@@ -18,7 +18,7 @@ b = [
     Body(5e11, np.array([[45., 0.],[0., 5.], [0., 0.]]), 'red', lock=False),  # "OTHER ONE"
     Body(7e11, np.array([[-45., 0.],[0., 5.], [0., 0.]]), 'red', lock=False),  # "OTHER ONE"
 ]
-s = Simulation(np.array(0.1), np.array(95*60*4), b)
+s = Simulation(np.array(0.01), np.array(95*60*4), b)
 g = OrbitalGraphics(b)
 
 if __name__ == '__main__' and sys.flags.interactive == 0:
