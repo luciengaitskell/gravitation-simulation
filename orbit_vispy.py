@@ -13,10 +13,10 @@ M_SUN = 1.989e30  # kg
 
 
 b = [
-    Body(5, np.array([[50, 0.],[0., 10.], [0., 0.]])),
-    #Body(M_EARTH, np.array([[ R_EARTH + 408.*1e3 , 0.],[0., 7660.], [0., 0.]])),
-    #Body(M_SUN, np.array([[0., 0.],[0., 0.], [0., 0.]]), lock=True)
-Body(5e13, np.array([[0., 0.],[0., 0.], [0., 0.]]), lock=True)
+    Body(10e11, np.array([[40., 0.],[0., 10.], [0., 0.]]), 'green'),  # "EARTH"
+    Body(5e13, np.array([[0., 0.],[0., 0.], [0., 0.]]), 'white', lock=False),  # "SUN"
+    Body(5e11, np.array([[45., 0.],[0., 5.], [0., 0.]]), 'red', lock=False),  # "OTHER ONE"
+    Body(7e11, np.array([[-45., 0.],[0., 5.], [0., 0.]]), 'red', lock=False),  # "OTHER ONE"
 ]
 s = Simulation(np.array(0.1), np.array(95*60*4), b)
 g = OrbitalGraphics(b)

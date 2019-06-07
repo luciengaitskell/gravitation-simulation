@@ -11,11 +11,13 @@ G = 6.67e-11  # m^3 / kg*s^2
 
 
 class Body:
-    def __init__(self, mass, pos, lock=False):
+    def __init__(self, mass, pos, color, lock=False):
         self.history = []
         self.state = pos
         self.mass = mass
         self.LOCK = lock
+
+        self.color = color
 
         self.curr_state = None
 
