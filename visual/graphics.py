@@ -6,8 +6,9 @@ from vispy.visuals.transforms import STTransform
 
 
 class OrbitalGraphics:
-    def __setup_objects(self):
-        self.trails.set_data(np.array([[0, 0, 0], [0, 0, 0]]), edge_color=None, face_color=(1, 1, 1, .5), size=5)
+    def __setup_trail(self, t):
+        self.view.add(t)
+        t.set_data(np.array([[0, 0, 0], [0, 0, 0]]), edge_color=None, face_color=(1, 1, 1, .5), size=5)
 
     def __setup_camera(self):
         self.view.camera.set_range(x=[-55, 55])
@@ -22,15 +23,14 @@ class OrbitalGraphics:
         self.view.camera = 'turntable'
 
         self.bodies = []
+        self.trails = []
 
         for b in bodies:
-            self.bodies.append(scene.visuals.Sphere(radius=math.pow(b.mass/1e12, 1/3), method='latitude',
-                                                    parent=self.view.scene, edge_color='white'))
+            self.bodies.append(scene.visuals.Sphere(radius=math.pow(b.mass/1e11, 1/3), method='latitude',
+                                                    parent=self.view.scene, edge_color=b.color))
+            self.trails.append(scene.visuals.Markers())
+            self.__setup_trail(self.trails[-1])
 
-        self.trails = scene.visuals.Markers()
-        self.view.add(self.trails)
-
-        self.__setup_objects()
         self.__setup_camera()
 
     '''
