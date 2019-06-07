@@ -60,6 +60,8 @@ plt.draw()
 #cbar.set_label("time (sec)")
 
 
+GRAPHICS_SKIP = 800
+
 try:
     for istep in range(1, T_ITER):
         t = T_STEP * istep  # (sec) Time at step
@@ -80,10 +82,12 @@ try:
 
         history[istep] = np.array([xp, vp, ap])
 
-        #graph = plt.scatter(0, 0, c='red')
-        plt.scatter(*(xp.reshape(2,1) / 1e3), c=[t], s=0.05)  # y pos vs. x pos
-        plt.draw()
-        plt.pause(0.001)
+        if (istep) % GRAPHICS_SKIP == 0:
+            #plt.scatter(*(xp.reshape(2,1) / 1e3), c=[t], s=0.05)  # y pos vs. x pos
+            missing_history = history[istep-GRAPHICS_SKIP:istep, 0, :].T / 1e3
+            plt.scatter(*(missing_history), c=np.arange(T_STEP*(istep-GRAPHICS_SKIP), t, T_STEP), s=0.05)  # y pos vs. x pos
+            plt.draw()
+            plt.pause(0.001)
         #plt.scatter(*(history[:, 0, :].T / 1e3), c=t_seconds, s=0.05)  # y pos vs. x pos
 except KeyboardInterrupt:
     pass
