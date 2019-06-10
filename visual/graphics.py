@@ -1,5 +1,6 @@
 import math
 import numpy as np
+import time
 
 from vispy import scene
 from vispy.visuals.transforms import STTransform
@@ -42,7 +43,12 @@ class OrbitalGraphics:
     def earth_transform(self, trans):
         self.earth.transform = trans'''
 
-    def draw(self, t=0.1):
+    def draw(self, fps=24):
+        sleep_max = 1./fps
+
+        t_start = time.time()
         im = self.canvas.render()
-        self.canvas.app.sleep(t)
-        return t, im
+        t_sleep = sleep_max - (time.time()-t_start)
+        self.canvas.app.sleep(t_sleep)
+        if t_sleep < 0.001: print("CAN'T KEEP UP VISUALS ({})".format(t_sleep))
+        return t_sleep, im
