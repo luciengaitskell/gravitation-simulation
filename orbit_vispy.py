@@ -3,7 +3,8 @@ import sys
 from threading import Thread
 import time
 
-from graphics import OrbitalGraphics, STTransform
+from vispy import app
+from visual.graphics import OrbitalGraphics, STTransform
 
 from sim.body import Body, KEY
 from sim.simulation import Simulation
@@ -15,7 +16,6 @@ R_EARTH = 6.5e6  # m
 M_SUN = 1.989e30  # kg
 
 # -- Graphics Variables --
-FRAME_RATE = 1
 TIME_WARP = 2  # times realtime
 
 # -- Thread Variables --
@@ -53,17 +53,25 @@ def simulation():
 _thread_sim = Thread(target=simulation, name="sim-loop")
 
 
+def vis_update(ev):
+    for b_i in range(len(b)):
+        g.bodies[b_i].transform = STTransform(translate=[b[b_i].state[0, 0], b[b_i].state[0, 1], 0])
+        g.trails[b_i].set_data(b[b_i].tracking[0:s.i_step], edge_color=b[b_i].color, face_color=None, size=5)
+
+    # print(np.linalg.norm(b[0].state[KEY.VEL]), b[0].state[KEY.ACC])
+
+
+#timer = app.Timer(interval='auto', connect=vis_update)
+timer = app.Timer(interval='0.1', connect=vis_update)
+
+
 if __name__ == '__main__' and sys.flags.interactive == 0:
     T_START = time.time()  # Set simulation start time (for live update)
     _thread_sim.start()  # Start simulation thread
+    timer.start()
 
     try:
-        while s.i_step < s.T_MAX:
-            for b_i in range(len(b)):
-                g.bodies[b_i].transform = STTransform(translate=[b[b_i].state[0, 0], b[b_i].state[0, 1], 0])
-                g.trails[b_i].set_data(b[b_i].tracking[0:s.i_step], edge_color=b[b_i].color, face_color=None, size=5)
-            #print(np.linalg.norm(b[0].state[KEY.VEL]), b[0].state[KEY.ACC])
-            g.draw(FRAME_RATE)
+        app.run()
     except KeyboardInterrupt:
         running = False
         _thread_sim.join()
